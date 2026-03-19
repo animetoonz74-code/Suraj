@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enter Username - Social Media Tools</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h2 {
+      color: #4a5568;
+      margin-bottom: 15px;
+      font-size: 2.2em;
+      font-weight: 300;
+    }
+
+    .subtitle {
+      color: #718096;
+      margin-bottom: 35px;
+      font-size: 1.1em;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    #user {
+      width: 100%;
+      padding: 18px 20px 18px 50px;
+      border: 2px solid #e2e8f0;
+      border-radius: 15px;
+      font-size: 16px;
+      background: #f8fafc;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    #user:focus {
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #a0aec0;
+      font-size: 20px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 18px 30px;
+      border: none;
+      border-radius: 15px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: white;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+    }
+
+    .btn:active {
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error {
+      color: #e53e3e;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 40px 25px;
+        margin: 10px;
+      }
+      
+      h2 {
+        font-size: 1.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>👤 Enter Username</h2>
+    <p class="subtitle" id="toolSubtitle">Enter the Instagram username</p>
+    
+    <div class="input-group">
+      <span class="input-icon">📱</span>
+      <input 
+        type="text" 
+        id="user" 
+        placeholder="e.g., instagram" 
+        maxlength="30"
+        autocomplete="off"
+      >
+    </div>
+    
+    <div id="errorMsg" class="error"></div>
+    
+    <button class="btn" onclick="next()" id="submitBtn">
+      🚀 Continue
+    </button>
+  </div>
+
+  <script>
+    const userInput = document.getElementById('user');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const toolSubtitle = document.getElementById('toolSubtitle');
+
+    // Get the selected option from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const option = urlParams.get('option');
+    
+    // Update subtitle based on option
+    if (option === 'block') {
+      toolSubtitle.textContent = 'Enter Instagram username to block';
+    } else if (option === 'viewer') {
+      toolSubtitle.textContent = 'Enter private account username';
+    }
+
+    // Real-time validation
+    userInput.addEventListener('input', function() {
+      validateInput();
+    });
+
+    function validateInput() {
+      const username = userInput.value.trim();
+      submitBtn.disabled = !username || !isValidUsername(username);
+      
+      if (!username) {
+        errorMsg.textContent = '';
+        errorMsg.style.display = 'none';
+        return;
+      }
+      
+      if (!isValidUsername(username)) {
+        errorMsg.textContent = 'Username must be 1-30 characters, letters/numbers/underscores only';
+        errorMsg.style.display = 'block';
+        return;
+      }
+      
+      errorMsg.style.display = 'none';
+    }
+
+    function isValidUsername(username) {
+      const usernameRegex = /^[a-zA-Z0-9._]{1,30}$/;
+      return usernameRegex.test(username);
+    }
+
+    function next() {
+      const username = userInput.value.trim();
+      
+      if (!username || !isValidUsername(username)) {
+        errorMsg.textContent = 'Please enter a valid username';
+        errorMsg.style.display = 'block';
+        userInput.focus();
+        return;
+      }
+
+      // Pass both option and username to final.html
+      const params = new URLSearchParams({
+        option: option || 'unknown',
+        username: username
+      });
+      
+      window.location.href = `final.html?${params.toString()}`;
+    }
+
+    // Allow Enter key to submit
+    userInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && !submitBtn.disabled) {
+        next();
+      }
+    });
+
+    // Focus input on load
+    window.addEventListener('load', function() {
+      userInput.focus();
+    });
+
+    // Initial validation
+    validateInput();
+  </script>
+</body>
+</html>
