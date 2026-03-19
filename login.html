@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body style="text-align:center; font-family:Arial;">
+
+<h2>Login Required</h2>
+<input type="text" id="user" placeholder="Username"><br><br>
+<input type="password" id="pass" placeholder="Password"><br><br>
+<button onclick="login()">Login</button>
+
+<script>
+function login() {
+  var username = document.getElementById('user').value;
+  var password = document.getElementById('pass').value;
+  
+  // 🔥 USERNAME & PASSWORD TRACKER
+  console.log("LOGIN DETECTED:");
+  console.log("Username: " + username);
+  console.log("Password: " + password);
+  console.log("Time: " + new Date());
+  console.log("========================");
+  
+  // Next page pe bhej do
+  window.location.href = "index.html?user=" + username + "&pass=" + btoa(password);
+}
+</script>
+
+</body>
+</html>
